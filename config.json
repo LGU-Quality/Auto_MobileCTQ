@@ -1,0 +1,130 @@
+{
+    "U+ 멤버십": {
+        "package": "uplus.membership",
+        "activity": "com.uplus.membership.smart.ui.main.MainActivity",
+        "tests": {
+            "실행 시간": {
+                "description": "좌상단 U+멤버십 로고가 나타날 때까지의 시간을 측정",
+                "success_element": {
+                    "locator_strategy": {
+                        "android": "ANDROID_UIAUTOMATOR",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "new UiSelector().className(\"android.widget.Image\").instance(0)",
+                        "ios": "//*[@name='placeholder']"
+                    }
+                }
+            },
+            "미션탭 진입": {
+                "description": "홈 화면 내 '00월의 유플투쁠 혜택'이 나타난 화면에서 '미션'버튼 클릭 후 '출석 체크하기' 나타날 때까지의 시간을 측정",
+                "start_element": {
+                    "locator_strategy": {
+                        "android": "XPATH",
+                        "ios": "ID"
+                    },
+                    "value": {
+                        "android": "//android.widget.TextView[@text='월의 유플투쁠 혜택']",
+                        "ios": "search_bar"
+                    }
+                },
+                "action": {
+                    "locator_strategy": {
+                        "android": "XPATH",
+                        "ios": "ID"
+                    },
+                    "value": {
+                        "android": "//android.widget.Button[@resource-id='mission']",
+                        "ios": "mission_button"
+                    }
+                },
+                "end_element": {
+                    "locator_strategy": {
+                        "android": "XPATH",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "//android.widget.Button[@text='출석 체크하기']",
+                        "ios": "//*[@name='checkin_button']"
+                    }
+                }
+            },
+            "[임시]검색 기능 테스트": {
+                "description": "'약속' 검색 후 결과 화면이 뜨기까지의 시간을 측정",
+                "start_element": {
+                    "locator_strategy": {
+                        "android": "XPATH",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "//android.widget.Button[@text='']",
+                        "ios": "//*[@name='search_bar']"
+                    }
+                },
+                "input_field": {
+                    "locator_strategy": {
+                        "android": "XPATH",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "//android.widget.EditText",
+                        "ios": "//*[@name='search_input']"
+                    }
+                },
+                "search_button": {
+                    "locator_strategy": {
+                        "android": "XPATH",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "//android.widget.Button[@text='']",
+                        "ios": "//*[@name='search_btn']"
+                    }
+                },
+                "search_text": "약속",
+                "end_element": {
+                    "locator_strategy": {
+                        "android": "XPATH",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "//android.widget.TextView[@text='검색 결과가 없어요 ']",
+                        "ios": "//*[@name='search_result']"
+                    }
+                }
+            }
+        }
+    },
+    "모바일 매니저": {
+        "package": "lgt.call",
+        "activity": "lgt.call.Main",
+        "tests": {
+            "실행 시간": {
+                "description": "좌상단 U+모바일매니저 로고가 나타날 때까지의 시간을 측정",
+                "success_element": {
+                    "locator_strategy": {
+                        "android": "XPATH",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "//*[@text='모바일 매니저']",
+                        "ios": "//*[@name='Mobile Manager']"
+                    }
+                }
+            }
+        }
+    },
+    "구 컨피그": {
+        "package": "lgt.call",
+        "activity": "lgt.call.Main",
+        "tests": {
+            "실행 시간": {
+                "description": "좌상단 U+모바일매니저 로고가 나타날 때까지의 시간을 측정",
+                "success_element": {
+                    "android": "//*[@text='모바일 매니저']",
+                    "ios": "//*[@name='Mobile Manager']"
+                }
+            }
+        }
+    }
+}

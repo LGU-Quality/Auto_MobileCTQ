@@ -1,59 +1,7 @@
 import json
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget, QComboBox, QSpinBox, QTextEdit, QMenu, QFrame
-from PyQt5.QtCore import QThread, pyqtSignal, Qt
-from automation import measure_app_launch_time, measure_screen_transition
-from device_utils import get_android_device, get_ios_device
-
-
-class TestThread(QThread):
-    log_signal = pyqtSignal(str)
-    result_signal = pyqtSignal(str)
-
-    def __init__(self, app_info, test_info, platform_name, wait_time, test_count):
-        super().__init__()
-        self.app_info = app_info
-        self.test_info = test_info
-        self.platform_name = platform_name
-        self.wait_time = wait_time
-        self.test_count = test_count
-
-    def run(self):
-        device_name = get_android_device() if self.platform_name == "Android" else get_ios_device()
-        self.log_signal.emit(f"테스트 시작... (디바이스: {device_name}, 플랫폼: {self.platform_name})")
-
-        try:
-            if "start_element" in self.test_info:
-                launch_times, avg_time = measure_screen_transition(
-                    self.app_info["package"],
-                    self.app_info["activity"],
-                    self.test_info,
-                    device_name,
-                    self.platform_name,
-                    self.wait_time,
-                    self.test_count,
-                    self.log_signal
-                )
-            else:
-                launch_times, avg_time = measure_app_launch_time(
-                    self.app_info["package"],
-                    self.app_info["activity"],
-                    self.test_info["success_element"][self.platform_name.lower()],
-                    device_name,
-                    self.platform_name,
-                    self.wait_time,
-                    self.test_count,
-                    self.log_signal
-                )
-
-            result_message = f"평균 실행 시간: {avg_time:.2f} 초"
-            self.result_signal.emit(result_message)
-            self.log_signal.emit(result_message)
-
-        except Exception as e:
-            self.result_signal.emit(f"테스트 중 오류 발생: {str(e)}")
-        finally:
-            self.log_signal.emit("테스트 종료.")
-
+from PyQt5.QtCore import Qt
+from test_thread import TestThread
 
 class ClickableLabel(QLabel):
     """우클릭 복사가 가능한 QLabel"""
@@ -196,16 +144,20 @@ class AutomationApp(QMainWindow):
         app_name = self.app_combo.currentText()
         test_name = self.test_combo.currentText()
         platform_name = self.platform_combo.currentText()
+        print(f"🔍 platform_name 확인: {platform_name}")
 
         if not app_name or not test_name:
-            self.log_output.append("❌ 오류: 앱 또는 테스트 정보를 찾을 수 없습니다.")
-            self.result_label.setText("❌ 테스트 실패: 앱 또는 테스트 정보 없음")  # 결과에도 오류 표시
+            self.log_output.append("앱 또는 테스트 정보를 찾을 수 없습니다.")
+            self.result_label.setText("❌ 테스트 실패: 앱 또는 테스트 정보 없음") 
             return
 
         app_info = self.apps[app_name]
         test_info = app_info["tests"][test_name]
 
-        self.log_output.append(f"🟢 '{test_name}' ({platform_name}) 테스트 시작...")
+        # ✅ 로그 추가 (test_info 구조 확인)
+        print(f"🔍 test_info 구조 확인: {test_info}")
+
+        self.log_output.append(f"🟢{app_name}앱/{test_name}/[{platform_name}] 테스트 시작...")
 
         self.run_button.setEnabled(False)
         self.test_thread = TestThread(
@@ -219,6 +171,7 @@ class AutomationApp(QMainWindow):
         self.test_thread.result_signal.connect(self.show_result)
         self.test_thread.finished.connect(self.on_test_completed)
         self.test_thread.start()
+
 
     def update_log(self, message):
         """로그를 업데이트하고 자동 스크롤"""

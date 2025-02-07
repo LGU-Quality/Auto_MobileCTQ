@@ -1,7 +1,8 @@
+import logging
+import time
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
 from appium.options.ios import XCUITestOptions  # iOS 지원 추가
-import time
 from statistics import mean
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -10,6 +11,33 @@ from selenium.common.exceptions import TimeoutException
 from appium.webdriver.common.appiumby import AppiumBy
 
 APPIUM_SERVER_URL = "http://127.0.0.1:4723"
+
+# 로깅 설정
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    level=logging.INFO,
+)
+
+# ✅ Locator 전략 매핑
+LOCATOR_MAPPING = {
+    # "ID": By.ID,
+    "ID": AppiumBy.ID,
+    "XPATH": By.XPATH,
+    "ANDROID_UIAUTOMATOR": AppiumBy.ANDROID_UIAUTOMATOR,
+    "IOS_PREDICATE": AppiumBy.IOS_PREDICATE,
+    "ACCESSIBILITY_ID": AppiumBy.ACCESSIBILITY_ID,
+    "DOM": "DOM"
+}
+
+def quick_search(driver, xml_string, timeout=10, poll_interval=0.05):
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        # 현재 페이지의 XML 소스 가져오기
+        page_source = driver.page_source
+        if xml_string in page_source:
+            return True
+        time.sleep(poll_interval)
+    return False
 
 
 def setup_driver(platform_name, app_package, app_activity, device_name):
@@ -25,38 +53,30 @@ def setup_driver(platform_name, app_package, app_activity, device_name):
 
 
 def get_locator_strategy(element_info, platform_name):
-    """ 요소 정보에서 locator_strategy와 value를 추출하고, 기본값을 적용 """
-    
-    if not element_info:
-        raise ValueError("❌ 유효하지 않은 요소 정보!")
-
+    """
+    요소 정보에서 locator_strategy와 value를 추출하고 기본값을 설정
+    """
     platform_key = platform_name.lower()
+    default_strategy = By.XPATH  # 기본값을 XPATH로 설정
 
-    # 기본적으로 XPATH를 사용하도록 설정
-    default_strategy = By.XPATH
-    strategy_mapping = {
-        "ID": By.ID,
-        "XPATH": By.XPATH,
-        "ANDROID_UIAUTOMATOR": AppiumBy.ANDROID_UIAUTOMATOR,
-        "IOS_PREDICATE": AppiumBy.IOS_PREDICATE,
-        "ACCESSIBILITY_ID": AppiumBy.ACCESSIBILITY_ID
-    }
+    if not element_info:
+        raise ValueError("❌ 요소 정보가 유효하지 않습니다.")
 
-    # ✅ 키 존재 여부 확인 후 기본값 적용
     locator_strategy = element_info.get("locator_strategy", {}).get(platform_key, "XPATH")
     locator_value = element_info.get("value", {}).get(platform_key, None)
 
     if not locator_value:
         raise ValueError(f"❌ '{platform_key}'에 대한 locator 값이 없습니다!")
 
-    return strategy_mapping.get(locator_strategy, default_strategy), locator_value
-
+    return LOCATOR_MAPPING.get(locator_strategy, default_strategy), locator_value
 
 
 def measure_app_launch_time(app_package, app_activity, test_info, device_name, platform_name, wait_time=10, test_count=10, log_signal=None):
     """앱 실행 후 특정 UI가 나타날 때까지의 시간을 측정"""
     
     driver = setup_driver(platform_name, app_package, app_activity, device_name)
+    driver.implicitly_wait(0)  # Explicit wait만 사용하여 대기 시간 최적화
+
     launch_times = []
 
     try:
@@ -71,13 +91,17 @@ def measure_app_launch_time(app_package, app_activity, test_info, device_name, p
             # ✅ 요소 탐색 전략 결정
             by_strategy, success_element = get_locator_strategy(test_info["success_element"], platform_name)
 
-            try:
-                WebDriverWait(driver, wait_time).until(
-                    EC.presence_of_element_located((by_strategy, success_element))
-                )
-            except TimeoutException:
-                log_signal.emit(f"❌ 요소 탐색 실패 ({by_strategy}): {success_element}")
-                continue
+            if by_strategy == "DOM":
+                element_found = quick_search(driver, success_element, timeout=wait_time, poll_interval=0.05)
+                if not element_found: log_signal.emit(f"❌ 요소 탐색 실패")
+            else:
+                try:
+                    WebDriverWait(driver, wait_time, poll_frequency=0.03).until(
+                        EC.presence_of_element_located((by_strategy, success_element))
+                    )
+                except TimeoutException:
+                    log_signal.emit(f"❌ 요소 탐색 실패 ({by_strategy}): {success_element}")
+                    continue
 
             end_time = time.time()
             launch_time = end_time - start_time
@@ -101,6 +125,8 @@ def measure_screen_transition(app_package, app_activity, test_info, device_name,
     """특정 화면(A)에서 화면(B)으로 이동하는 데 걸리는 시간을 측정"""
 
     driver = setup_driver(platform_name, app_package, app_activity, device_name)
+    driver.implicitly_wait(0)  # Explicit wait만 사용하여 대기 시간 최적화
+
     transition_times = []
 
     try:
@@ -134,7 +160,7 @@ def measure_screen_transition(app_package, app_activity, test_info, device_name,
             start_time = time.time()
 
             try:
-                WebDriverWait(driver, wait_time).until(
+                WebDriverWait(driver, wait_time, poll_frequency=0.1).until(
                     EC.presence_of_element_located((end_by, end_element))
                 )
                 end_time = time.time()
@@ -157,6 +183,8 @@ def measure_search_time(app_package, app_activity, test_info, device_name, platf
     """검색어 입력 후 검색 결과가 나타날 때까지의 시간을 측정"""
 
     driver = setup_driver(platform_name, app_package, app_activity, device_name)
+    driver.implicitly_wait(0)  # Explicit wait만 사용하여 대기 시간 최적화
+
     search_times = []
 
     try:
@@ -167,26 +195,44 @@ def measure_search_time(app_package, app_activity, test_info, device_name, platf
             time.sleep(2)
             driver.activate_app(app_package)
 
+            init_by, init_element = get_locator_strategy(test_info["init_element"], platform_name)
             start_by, start_element = get_locator_strategy(test_info["start_element"], platform_name)
             input_by, input_element = get_locator_strategy(test_info["input_field"], platform_name)
             search_by, search_element = get_locator_strategy(test_info["search_button"], platform_name)
             end_by, end_element = get_locator_strategy(test_info["end_element"], platform_name)
 
-            WebDriverWait(driver, wait_time).until(
-                EC.presence_of_element_located((start_by, start_element))
-            )
+            try:
+                WebDriverWait(driver, wait_time).until(
+                    EC.presence_of_element_located((init_by, init_element))
+                )
+            except TimeoutException:
+                log_signal.emit("❌ 초기 화면 탐색 실패")
+                continue    
 
-            search_input = driver.find_element(input_by, input_element)
-            search_input.clear()
-            search_input.send_keys(test_info["search_text"])
+            try:
+                start_button = driver.find_element(start_by, start_element)
+                start_button.click()
+                time.sleep(3)
 
-            search_button = driver.find_element(search_by, search_element)
+                search_input = driver.find_element(input_by, input_element)
+                search_input.clear()
+                search_input.send_keys(test_info["search_text"])
+
+                search_button = driver.find_element(search_by, search_element)
+                search_button.click()
+            except Exception as e:
+                log_signal.emit(f"에러 발생: {e}")
+                continue
+
             start_time = time.time()
-            search_button.click()
+            
+            try:
+                WebDriverWait(driver, wait_time, poll_frequency=0.1).until(
+                    EC.presence_of_element_located((end_by, end_element))
+                )
+            except TimeoutException:
+                log_signal.emit("❌ 결과 요소 탐색 실패")
 
-            WebDriverWait(driver, wait_time).until(
-                EC.presence_of_element_located((end_by, end_element))
-            )
             end_time = time.time()
 
             search_time = end_time - start_time

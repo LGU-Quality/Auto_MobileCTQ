@@ -3,16 +3,42 @@
         "package": "uplus.membership",
         "activity": "com.uplus.membership.smart.ui.main.MainActivity",
         "tests": {
-            "실행 시간": {
+            "실행 시간_MISSION_UIAUTOMATOR": {
+                "description": "하단 미션 버튼이 나타날 때까지의 시간을 측정",
+                "success_element": {
+                    "locator_strategy": {
+                        "android": "ANDROID_UIAUTOMATOR",
+                        "ios": "ANDROID_UIAUTOMATOR"
+                    },
+                    "value": {
+                        "android": "new UiSelector().resourceId(\"mission\")",
+                        "ios": "new UiSelector().className(\"android.widget.Image\").instance(0)"
+                    }
+                }
+            },
+            "실행 시간_좌상단_UIAUTOMATOR": {
                 "description": "좌상단 U+멤버십 로고가 나타날 때까지의 시간을 측정",
                 "success_element": {
                     "locator_strategy": {
                         "android": "ANDROID_UIAUTOMATOR",
-                        "ios": "XPATH"
+                        "ios": "ANDROID_UIAUTOMATOR"
                     },
                     "value": {
                         "android": "new UiSelector().className(\"android.widget.Image\").instance(0)",
-                        "ios": "//*[@name='placeholder']"
+                        "ios": "new UiSelector().className(\"android.widget.Image\").instance(0)"
+                    }
+                }
+            },
+            "실행 시간_DOM_RAW": {
+                "description": "좌상단 U+멤버십 로고가 나타날 때까지의 시간을 측정",
+                "success_element": {
+                    "locator_strategy": {
+                        "android": "DOM",
+                        "ios": "ANDROID_UIAUTOMATOR"
+                    },
+                    "value": {
+                        "android": "resource-id=\"mission\"",
+                        "ios": "new UiSelector().className(\"android.widget.Image\").instance(0)"
                     }
                 }
             },
@@ -51,13 +77,23 @@
             },
             "[임시]검색 기능 테스트": {
                 "description": "'약속' 검색 후 결과 화면이 뜨기까지의 시간을 측정",
+                "init_element": {
+                    "locator_strategy": {
+                        "android": "ANDROID_UIAUTOMATOR",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "new UiSelector().className(\"android.widget.Image\").instance(0)",
+                        "ios": "//*[@name='search_bar']"
+                    }
+                },
                 "start_element": {
                     "locator_strategy": {
                         "android": "XPATH",
                         "ios": "XPATH"
                     },
                     "value": {
-                        "android": "//android.widget.Button[@text='']",
+                        "android": "//android.widget.Button[@text=\"\"]",
                         "ios": "//*[@name='search_bar']"
                     }
                 },
@@ -77,7 +113,7 @@
                         "ios": "XPATH"
                     },
                     "value": {
-                        "android": "//android.widget.Button[@text='']",
+                        "android": "//android.widget.Button[@text=\"\"]",
                         "ios": "//*[@name='search_btn']"
                     }
                 },
@@ -88,7 +124,7 @@
                         "ios": "XPATH"
                     },
                     "value": {
-                        "android": "//android.widget.TextView[@text='검색 결과가 없어요 ']",
+                        "android": "//android.widget.TextView[contains(@text, '검색 결과가 없어요')]",
                         "ios": "//*[@name='search_result']"
                     }
                 }

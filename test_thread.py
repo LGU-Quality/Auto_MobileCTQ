@@ -16,7 +16,7 @@ class TestThread(QThread):
 
     def run(self):
         device_name = get_android_device() if self.platform_name == "Android" else get_ios_device()
-        self.log_signal.emit(f"테스트 시작... (디바이스: {device_name}, 플랫폼: {self.platform_name})")
+        self.log_signal.emit(f"Appium 연결 시작... (디바이스: {device_name}, 플랫폼: {self.platform_name})")
 
         try:
             if "search_text" in self.test_info:

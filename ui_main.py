@@ -157,7 +157,7 @@ class AutomationApp(QMainWindow):
         # ✅ 로그 추가 (test_info 구조 확인)
         print(f"🔍 test_info 구조 확인: {test_info}")
 
-        self.log_output.append(f"🟢{app_name}앱/{test_name}/[{platform_name}] 테스트 시작...")
+        self.log_output.append(f"🟢{app_name}앱의 [{test_name}] 측정 시작...")
 
         self.run_button.setEnabled(False)
         self.test_thread = TestThread(

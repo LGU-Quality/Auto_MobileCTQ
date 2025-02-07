@@ -23,6 +23,35 @@ __pycache__/
 # VS Code 설정 파일 (필요한 경우 제외 가능)
 .vscode/
 
+### GPT 추가 코드
+# Python 관련
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyd
+
+# 가상 환경
+venv/
+.env
+*.env
+
+# 로그 및 실행 결과 파일
+logs/
+*.log
+*.out
+*.txt
+
+# IDE 및 시스템 파일
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# 빌드 및 배포 관련
+dist/
+build/
+
 # node-waf configuration
 .lock-wscript
 
@@ -117,6 +146,3 @@ dist
 
 # SvelteKit build / generate output
 .svelte-kit
-
-# End of https://www.toptal.com/developers/gitignore/api/node
-출처: https://inpa.tistory.com/entry/GIT-⚡️-gitignore-자동-생성 [Inpa Dev 👨‍💻:티스토리]

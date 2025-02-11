@@ -214,6 +214,21 @@ def measure_search_time(app_package, app_activity, test_info, device_name, platf
                 start_button.click()
                 time.sleep(3)
 
+                # 🔹 [2] start_element_2가 존재하는 경우 클릭 수행
+                if "start_element_2" in test_info:
+                    try:
+                        start2_by, start2_element = get_locator_strategy(test_info["start_element_2"], platform_name)
+                        log_signal.emit(f"🔍 start_element_2 확인: ({start2_by}, {start2_element})")
+                        
+                        start_button_2 = WebDriverWait(driver, wait_time).until(
+                            EC.element_to_be_clickable((start2_by, start2_element))
+                        )
+                        start_button_2.click()
+                        time.sleep(2)  # 클릭 후 잠시 대기
+                        log_signal.emit("✅ start_element_2 클릭 완료")
+                    except TimeoutException:
+                        log_signal.emit("❌ start_element_2 요소 탐색 실패 (무시하고 진행)")
+                        
                 search_input = driver.find_element(input_by, input_element)
                 search_input.clear()
                 search_input.send_keys(test_info["search_text"])

@@ -1,4 +1,120 @@
 {
+    "ixi-O": {
+        "package": "com.lguplus.aicallagent",
+        "activity": "com.lguplus.aicallagent.MainActivity",
+        "tests": {
+            "실행 시간": {
+                "description": "좌상단 \"최근 기록\" 텍스트가 나타날 때까지의 시간을 측정",
+                "success_element": {
+                    "locator_strategy": {
+                        "android": "ANDROID_UIAUTOMATOR",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "new UiSelector().text(\"최근 기록\").instance(0)",
+                        "ios": "//*[@name='Mobile Manager']"
+                    }
+                }
+            },
+            "메뉴 이동 소요시간": {
+                "description": "최근기록→연락처 이동 후 [내 프로필] 텍스트가 나타날 때까지의 시간을 측정",
+                "start_element": {
+                    "locator_strategy": {
+                        "android": "ANDROID_UIAUTOMATOR",
+                        "ios": "ID"
+                    },
+                    "value": {
+                        "android": "new UiSelector().text(\"최근 기록\").instance(0)",
+                        "ios": "search_bar"
+                    }
+                },
+                "action": {
+                    "locator_strategy": {
+                        "android": "ACCESSIBILITY_ID",
+                        "ios": "ACCESSIBILITY_ID"
+                    },
+                    "value": {
+                        "android": "연락처",
+                        "ios": "연락처"
+                    }
+                },
+                "end_element": {
+                    "locator_strategy": {
+                        "android": "ANDROID_UIAUTOMATOR",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "new UiSelector().text(\"내 프로필\")",
+                        "ios": "//*[@name='checkin_button']"
+                    }
+                }
+            },
+            "통화 내용 검색": {
+                "description": "'약속' 검색 후 결과 화면이 뜨기까지의 시간을 측정",
+                "init_element": {
+                    "locator_strategy": {
+                        "android": "ANDROID_UIAUTOMATOR",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "new UiSelector().text(\"최근 기록\").instance(0)",
+                        "ios": "//*[@name='search_bar']"
+                    }
+                },
+                "start_element": {
+                    "locator_strategy": {
+                        "android": "ACCESSIBILITY_ID",
+                        "ios": "ACCESSIBILITY_ID"
+                    },
+                    "value": {
+                        "android": "연락처",
+                        "ios": "연락처"
+                    }
+                },
+                "start_element_2": {
+                    "locator_strategy": {
+                        "android": "ANDROID_UIAUTOMATOR",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "new UiSelector().className(\"android.widget.Button\").instance(0)",
+                        "ios": "//*[@name='search_bar']"
+                    }
+                },
+                "input_field": {
+                    "locator_strategy": {
+                        "android": "ANDROID_UIAUTOMATOR",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "new UiSelector().className(\"android.view.View\").instance(4)",
+                        "ios": "//*[@name='search_input']"
+                    }
+                },
+                "search_button": {
+                    "locator_strategy": {
+                        "android": "ACCESSIBILITY_ID",
+                        "ios": "ACCESSIBILITY_ID"
+                    },
+                    "value": {
+                        "android": "검색",
+                        "ios": "검색"
+                    }
+                },
+                "search_text": "약속",
+                "end_element": {
+                    "locator_strategy": {
+                        "android": "ANDROID_UIAUTOMATOR",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "new UiSelector().className(\"android.view.View\").instance(16)",
+                        "ios": "//*[@name='search_result']"
+                    }
+                }
+            }
+        }
+    },
     "U+ 멤버십": {
         "package": "uplus.membership",
         "activity": "com.uplus.membership.smart.ui.main.MainActivity",

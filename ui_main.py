@@ -185,4 +185,4 @@ class AutomationApp(QMainWindow):
     def on_test_completed(self):
         """테스트 완료 후 UI 복구"""
         self.run_button.setEnabled(True)
-        self.log_output.append("✅ 테스트가 완료되었습니다.")
+        self.log_output.append("🏁 테스트가 완료되었습니다.")

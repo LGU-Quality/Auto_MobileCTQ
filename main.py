@@ -18,6 +18,16 @@ temp = {
   "appium:fullReset": false
 }
 
+temp = {
+  "platformName": "Android",
+  "appium:automationName": "uiautomator2",
+  "appium:deviceName": "R3CXA0BY0SK",
+  "appium:appPackage": "com.lguplus.aicallagent",
+  "appium:appActivity": "com.lguplus.aicallagent.MainActivity",
+  "appium:noReset": true,
+  "appium:fullReset": false
+}
+
 #  4.34
 # 4.89
 # 3초 내외가 나와야 함...

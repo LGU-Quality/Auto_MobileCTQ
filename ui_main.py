@@ -23,7 +23,7 @@ class AutomationApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("CTQ 측정 Tool")
-        self.setGeometry(300, 200, 600, 500)
+        self.setGeometry(300, 200, 600, 800)
 
         self.layout = QVBoxLayout()
 
@@ -79,7 +79,7 @@ class AutomationApp(QMainWindow):
         self.layout.addWidget(self.test_count_spin)
 
         # 📌 대기 시간 설정
-        self.wait_time_label = QLabel("대기 시간(초):")
+        self.wait_time_label = QLabel("터치 후 최대 대기 시간(초):")
         self.layout.addWidget(self.wait_time_label)
 
         self.wait_time_spin = QSpinBox()

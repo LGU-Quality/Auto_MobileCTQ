@@ -53,7 +53,7 @@ class TestThread(QThread):
                     self.log_signal
                 )
 
-            result_message = f"🏁평균 시간: {avg_time:.2f} 초"
+            result_message = f"🏁 평균 시간: {avg_time:.2f} 초"
             self.result_signal.emit(result_message)
             self.log_signal.emit(result_message)
 

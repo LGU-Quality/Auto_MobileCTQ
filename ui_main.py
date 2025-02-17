@@ -1,5 +1,5 @@
 import json
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget, QComboBox, QSpinBox, QTextEdit, QMenu, QFrame
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget, QComboBox, QSpinBox, QTextEdit, QMenu, QFrame, QHBoxLayout
 from PyQt5.QtCore import Qt
 from test_thread import TestThread
 
@@ -26,6 +26,10 @@ class AutomationApp(QMainWindow):
         self.setGeometry(300, 200, 600, 800)
 
         self.layout = QVBoxLayout()
+
+        # 📌 Appium 서버 정보 표시
+        self.appium_server_info = QLabel("📡 Appium 서버 정보: ")
+        self.layout.addWidget(self.appium_server_info)
 
         # 📌 앱 선택
         self.label = QLabel("테스트할 앱을 선택하세요:")
@@ -88,10 +92,19 @@ class AutomationApp(QMainWindow):
         self.wait_time_spin.setValue(10)
         self.layout.addWidget(self.wait_time_spin)
 
-        # 📌 테스트 실행 버튼
+        # 📌 버튼 레이아웃 (테스트 실행 & 중단)
+        self.button_layout = QHBoxLayout()
+
         self.run_button = QPushButton("테스트 실행")
         self.run_button.clicked.connect(self.run_test)
-        self.layout.addWidget(self.run_button)
+        self.button_layout.addWidget(self.run_button)
+
+        self.stop_button = QPushButton("테스트 중단")
+        self.stop_button.setEnabled(False)  # 처음에는 비활성화
+        self.stop_button.clicked.connect(self.stop_test)
+        self.button_layout.addWidget(self.stop_button)
+
+        self.layout.addLayout(self.button_layout)
 
         # 📌 결과 출력
         self.result_label = ClickableLabel("결과 출력:")
@@ -112,7 +125,14 @@ class AutomationApp(QMainWindow):
     def load_apps(self):
         """앱 목록을 불러와 UI에 반영"""
         with open("config.json", "r", encoding="utf-8") as file:
-            self.apps = json.load(file)
+            config = json.load(file)
+            # ✅ Appium 서버 정보 로드
+            self.appium_host = config.get("appium_server", {}).get("host", "127.0.0.1")
+            self.appium_port = config.get("appium_server", {}).get("port", 4723)
+            self.appium_server_info.setText(f"📡 Appium 서버 정보: {self.appium_host}:{self.appium_port}")
+
+            self.apps = config
+            self.apps.pop("appium_server", None)
 
         self.app_combo.clear()  # 기존 목록 초기화
         self.app_combo.addItems(self.apps.keys())
@@ -122,7 +142,9 @@ class AutomationApp(QMainWindow):
         self.test_combo.clear()
         app_name = self.app_combo.currentText()
 
-        if app_name and app_name in self.apps:
+        
+        # if app_name and app_name in self.apps:
+        if "tests" in self.apps[app_name]:
             self.test_combo.addItems(self.apps[app_name]["tests"].keys())
             self.update_description()  # 기본적으로 첫 번째 항목 설명 표시
         else:
@@ -160,6 +182,8 @@ class AutomationApp(QMainWindow):
         self.log_output.append(f"🟢{app_name}앱의 [{test_name}] 측정 시작...")
 
         self.run_button.setEnabled(False)
+        self.stop_button.setEnabled(True)
+
         self.test_thread = TestThread(
             app_info,
             test_info,
@@ -172,6 +196,12 @@ class AutomationApp(QMainWindow):
         self.test_thread.finished.connect(self.on_test_completed)
         self.test_thread.start()
 
+    def stop_test(self):
+        """테스트 중단"""
+        if self.test_thread and self.test_thread.isRunning():
+            self.test_thread.terminate()  # 스레드 강제 종료
+            self.log_output.append("⛔ 테스트가 중단되었습니다.")
+            self.on_test_completed()
 
     def update_log(self, message):
         """로그를 업데이트하고 자동 스크롤"""
@@ -185,4 +215,5 @@ class AutomationApp(QMainWindow):
     def on_test_completed(self):
         """테스트 완료 후 UI 복구"""
         self.run_button.setEnabled(True)
+        self.stop_button.setEnabled(False) 
         self.log_output.append("🏁 테스트가 완료되었습니다.")

@@ -1,5 +1,7 @@
 import logging
 import time
+import os
+import json
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
 from appium.options.ios import XCUITestOptions  # iOS 지원 추가
@@ -10,7 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from appium.webdriver.common.appiumby import AppiumBy
 
-APPIUM_SERVER_URL = "http://127.0.0.1:4723"
+# APPIUM_SERVER_URL = "http://127.0.0.1:4723"
 
 # 로깅 설정
 logging.basicConfig(
@@ -29,6 +31,17 @@ LOCATOR_MAPPING = {
     "DOM": "DOM"
 }
 
+
+def load_config():
+    """config.json을 로드하여 설정 값을 가져옴"""
+    config_path = os.path.join(os.path.dirname(__file__), "config.json")
+    with open(config_path, "r", encoding="utf-8") as file:
+        config = json.load(file)
+    return config
+
+config = load_config()
+
+
 def quick_search(driver, xml_string, timeout=10, poll_interval=0.05):
     start_time = time.time()
     while time.time() - start_time < timeout:
@@ -41,15 +54,34 @@ def quick_search(driver, xml_string, timeout=10, poll_interval=0.05):
 
 
 def setup_driver(platform_name, app_package, app_activity, device_name):
-    """Appium 드라이버 설정"""
-    options = UiAutomator2Options() if platform_name == "Android" else XCUITestOptions()
-    options.platform_name = platform_name
-    options.device_name = device_name
-    options.app_package = app_package if platform_name == "Android" else None
-    options.app_activity = app_activity if platform_name == "Android" else None
-    options.automation_name = "UiAutomator2" if platform_name == "Android" else "XCUITest"
-    options.no_reset = True
-    return webdriver.Remote(APPIUM_SERVER_URL, options=options)
+    """Appium 드라이버 설정 (config.json의 포트 반영)"""
+    
+    # 🔥 Appium 서버 포트 설정 (기본값: 4723, config.json에서 변경 가능)
+    appium_host = config.get("appium_server", {}).get("host", "127.0.0.1")
+    appium_port = config.get("appium_server", {}).get("port", 4723)
+    # appium_server_url = f"http://{appium_host}:{appium_port}/wd/hub"
+    appium_server_url = f"http://{appium_host}:{appium_port}"
+
+    print(f"🚀 Appium 서버 연결: {appium_server_url}")
+
+    if platform_name.lower() == "android":
+        options = UiAutomator2Options()
+        options.platform_name = platform_name
+        options.device_name = device_name
+        options.app_package = app_package
+        options.app_activity = app_activity
+        options.automation_name = "UiAutomator2"
+        options.no_reset = True
+    else:
+        options = XCUITestOptions()
+        options.platform_name = platform_name
+        options.device_name = device_name
+        options.bundle_id = app_package
+        options.automation_name = "XCUITest"
+        options.no_reset = True
+
+    driver = webdriver.Remote(appium_server_url, options=options)
+    return driver
 
 
 def get_locator_strategy(element_info, platform_name):

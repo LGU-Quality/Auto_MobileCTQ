@@ -28,6 +28,5 @@ temp = {
   "appium:fullReset": false
 }
 
-#  4.34
-# 4.89
-# 3초 내외가 나와야 함...
+
+# https://github.com/LGU-Quality/Auto_MobileCTQ.git

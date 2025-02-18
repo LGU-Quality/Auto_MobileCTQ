@@ -70,4 +70,4 @@ temp = {
 
 # https://github.com/LGU-Quality/Auto_MobileCTQ.git
 # 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
-# git remote set-url origin https://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@github.com/LGU-Quality/Auto_MobileCTQ.git
+# git remote set-url origin https://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@github.com/LGU-Quality/Auto_MobileCTQ

@@ -23,7 +23,7 @@
             "앱 발신 소요시간_(전화 발신)": {
                 "description": "키패드 '0' 입력 후 발신화면이 나타날 때까지의 시간을 측정",
                 "init_button": {
-                    "description": "ddd",
+                    "description": "하단 네비게이션 바 [키패드] 버튼 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
                         "ios": "ACCESSIBILITY_ID"
@@ -34,7 +34,7 @@
                     }
                 },
                 "start_element": {
-                    "description": "ddd",
+                    "description": "키패드 화면 내 [통화]아이콘 탐색",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
                         "ios": "ACCESSIBILITY_ID"
@@ -45,7 +45,7 @@
                     }
                 },
                 "action": {
-                    "description": "ddd",
+                    "description": "키패드에서 숫자 '0' 터치",
                     "locator_strategy": {
                         "android": "ANDROID_UIAUTOMATOR",
                         "ios": "ACCESSIBILITY_ID"
@@ -56,7 +56,7 @@
                     }
                 },
                 "action2": {
-                    "description": "ddd",
+                    "description": "키패드에서 [통화] 아이콘 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
                         "ios": "ACCESSIBILITY_ID"
@@ -67,7 +67,7 @@
                     }
                 },
                 "end_element": {
-                    "description": "ddd",
+                    "description": "발신화면에서 [끊기] 아이콘 탐색",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
                         "ios": "ACCESSIBILITY_ID"
@@ -78,7 +78,7 @@
                     }
                 },
                 "end_button": {
-                    "description": "ddd",
+                    "description": "발신화면에서 [끊기] 아이콘 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
                         "ios": "ACCESSIBILITY_ID"
@@ -92,6 +92,7 @@
             "메뉴 이동 소요시간_(최근기록→연락처)": {
                 "description": "최근기록→연락처 이동 후 [내 프로필] 텍스트가 나타날 때까지의 시간을 측정",
                 "init_button": {
+                    "description": "하단 네비게이션 바 [최근 기록] 버튼 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
                         "ios": "ACCESSIBILITY_ID"
@@ -102,7 +103,7 @@
                     }
                 },
                 "start_element": {
-                    "description": "ddd",
+                    "description": "좌측 상단 '최근 기록' 텍스트 표시 대기",
                     "locator_strategy": {
                         "android": "ANDROID_UIAUTOMATOR",
                         "ios": "ID"
@@ -113,7 +114,7 @@
                     }
                 },
                 "action": {
-                    "description": "ddd",
+                    "description": "하단 네비게이션 바 [연락처] 버튼 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
                         "ios": "ACCESSIBILITY_ID"
@@ -124,7 +125,7 @@
                     }
                 },
                 "end_element": {
-                    "description": "ddd",
+                    "description": "목록에서 '내 프로필' 텍스트 탐색",
                     "locator_strategy": {
                         "android": "ANDROID_UIAUTOMATOR",
                         "ios": "XPATH"
@@ -138,7 +139,7 @@
             "메뉴 이동 소요시간_(최근기록→디스커버)": {
                 "description": "최근기록→디스커버 이동 후 [내 프로필] 텍스트가 나타날 때까지의 시간을 측정",
                 "init_button": {
-                    "description": "ddd",
+                    "description": "하단 네비게이션 바 [최근 기록] 버튼 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
                         "ios": "ACCESSIBILITY_ID"
@@ -149,7 +150,7 @@
                     }
                 },
                 "start_element": {
-                    "description": "ddd",
+                    "description": "좌측 상단 '최근 기록' 텍스트 표시 대기",
                     "locator_strategy": {
                         "android": "ANDROID_UIAUTOMATOR",
                         "ios": "ID"
@@ -160,7 +161,7 @@
                     }
                 },
                 "action": {
-                    "description": "ddd",
+                    "description": "하단 네비게이션 바 [디스커버] 버튼 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
                         "ios": "ACCESSIBILITY_ID"
@@ -171,7 +172,7 @@
                     }
                 },
                 "end_element": {
-                    "description": "ddd",
+                    "description": "내용 중 '익시오 활용 가이드' 노출 탐색",
                     "locator_strategy": {
                         "android": "ANDROID_UIAUTOMATOR",
                         "ios": "XPATH"
@@ -182,7 +183,7 @@
                     }
                 },
                 "end_button": {
-                    "description": "ddd",
+                    "description": "하단 네비게이션 바 [최근 기록] 버튼 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
                         "ios": "ACCESSIBILITY_ID"
@@ -206,7 +207,7 @@
                     }
                 },
                 "init_button": {
-                    "description": "ddd",
+                    "description": "하단 네비게이션 바 [연락처] 버튼 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
                         "ios": "ACCESSIBILITY_ID"
@@ -217,7 +218,7 @@
                     }
                 },
                 "init_button2": {
-                    "description": "ddd",
+                    "description": "상단 [돋보기] 아이콘 터치",
                     "locator_strategy": {
                         "android": "ANDROID_UIAUTOMATOR",
                         "ios": "XPATH"
@@ -228,6 +229,7 @@
                     }
                 },
                 "input_field": {
+                    "description": "Input Field 설정",
                     "locator_strategy": {
                         "android": "CLASS_NAME",
                         "ios": "CLASS_NAME"
@@ -239,7 +241,7 @@
                 },
                 "search_text": "약속",
                 "search_button": {
-                    "description": "ddd",
+                    "description": "우측 상단 [검색] 버튼 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
                         "ios": "ACCESSIBILITY_ID"
@@ -250,7 +252,7 @@
                     }
                 },
                 "end_element": {
-                    "description": "ddd",
+                    "description": "목록 중 녹음 내용에 '약속'이 있는 검색 결과 탐색",
                     "locator_strategy": {
                         "android": "ANDROID_UIAUTOMATOR",
                         "ios": "XPATH"
@@ -295,6 +297,10 @@
                 }
             }            
         }
+    },
+
+    "위에까지는 기능 확인 완료" : {
+        "아래부터는 기능 재 확인 필요" : "재확인 필요"
     },
     "U+ 멤버십": {
         "package": "uplus.membership",

@@ -20,8 +20,249 @@
                     }
                 }
             },
-            "메뉴 이동 소요시간": {
+            "앱 발신 소요시간_(전화 발신)": {
+                "description": "키패드 '0' 입력 후 발신화면이 나타날 때까지의 시간을 측정",
+                "init_button": {
+                    "description": "ddd",
+                    "locator_strategy": {
+                        "android": "ACCESSIBILITY_ID",
+                        "ios": "ACCESSIBILITY_ID"
+                    },
+                    "value": {
+                        "android": "키패드",
+                        "ios": "키패드"
+                    }
+                },
+                "start_element": {
+                    "description": "ddd",
+                    "locator_strategy": {
+                        "android": "ACCESSIBILITY_ID",
+                        "ios": "ACCESSIBILITY_ID"
+                    },
+                    "value": {
+                        "android": "받기",
+                        "ios": "받기"
+                    }
+                },
+                "action": {
+                    "description": "ddd",
+                    "locator_strategy": {
+                        "android": "ANDROID_UIAUTOMATOR",
+                        "ios": "ACCESSIBILITY_ID"
+                    },
+                    "value": {
+                        "android": "new UiSelector().text(\"0\").instance(1)",
+                        "ios": "연락처"
+                    }
+                },
+                "action2": {
+                    "description": "ddd",
+                    "locator_strategy": {
+                        "android": "ACCESSIBILITY_ID",
+                        "ios": "ACCESSIBILITY_ID"
+                    },
+                    "value": {
+                        "android": "받기",
+                        "ios": "받기"
+                    }
+                },
+                "end_element": {
+                    "description": "ddd",
+                    "locator_strategy": {
+                        "android": "ACCESSIBILITY_ID",
+                        "ios": "ACCESSIBILITY_ID"
+                    },
+                    "value": {
+                        "android": "끊기",
+                        "ios": "끊기"
+                    }
+                },
+                "end_button": {
+                    "description": "ddd",
+                    "locator_strategy": {
+                        "android": "ACCESSIBILITY_ID",
+                        "ios": "ACCESSIBILITY_ID"
+                    },
+                    "value": {
+                        "android": "끊기",
+                        "ios": "끊기"
+                    }
+                }
+            },
+            "메뉴 이동 소요시간_(최근기록→연락처)": {
                 "description": "최근기록→연락처 이동 후 [내 프로필] 텍스트가 나타날 때까지의 시간을 측정",
+                "init_button": {
+                    "locator_strategy": {
+                        "android": "ACCESSIBILITY_ID",
+                        "ios": "ACCESSIBILITY_ID"
+                    },
+                    "value": {
+                        "android": "최근 기록",
+                        "ios": "최근 기록"
+                    }
+                },
+                "start_element": {
+                    "description": "ddd",
+                    "locator_strategy": {
+                        "android": "ANDROID_UIAUTOMATOR",
+                        "ios": "ID"
+                    },
+                    "value": {
+                        "android": "new UiSelector().text(\"최근 기록\").instance(0)",
+                        "ios": "search_bar"
+                    }
+                },
+                "action": {
+                    "description": "ddd",
+                    "locator_strategy": {
+                        "android": "ACCESSIBILITY_ID",
+                        "ios": "ACCESSIBILITY_ID"
+                    },
+                    "value": {
+                        "android": "연락처",
+                        "ios": "연락처"
+                    }
+                },
+                "end_element": {
+                    "description": "ddd",
+                    "locator_strategy": {
+                        "android": "ANDROID_UIAUTOMATOR",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "new UiSelector().text(\"내 프로필\")",
+                        "ios": "//*[@name='checkin_button']"
+                    }
+                }
+            },
+            "메뉴 이동 소요시간_(최근기록→디스커버)": {
+                "description": "최근기록→디스커버 이동 후 [내 프로필] 텍스트가 나타날 때까지의 시간을 측정",
+                "init_button": {
+                    "description": "ddd",
+                    "locator_strategy": {
+                        "android": "ACCESSIBILITY_ID",
+                        "ios": "ACCESSIBILITY_ID"
+                    },
+                    "value": {
+                        "android": "최근 기록",
+                        "ios": "최근 기록"
+                    }
+                },
+                "start_element": {
+                    "description": "ddd",
+                    "locator_strategy": {
+                        "android": "ANDROID_UIAUTOMATOR",
+                        "ios": "ID"
+                    },
+                    "value": {
+                        "android": "new UiSelector().text(\"최근 기록\").instance(0)",
+                        "ios": "search_bar"
+                    }
+                },
+                "action": {
+                    "description": "ddd",
+                    "locator_strategy": {
+                        "android": "ACCESSIBILITY_ID",
+                        "ios": "ACCESSIBILITY_ID"
+                    },
+                    "value": {
+                        "android": "디스커버",
+                        "ios": "디스커버"
+                    }
+                },
+                "end_element": {
+                    "description": "ddd",
+                    "locator_strategy": {
+                        "android": "ANDROID_UIAUTOMATOR",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "new UiSelector().text(\"익시오 활용 가이드\")",
+                        "ios": "//*[@name='checkin_button']"
+                    }
+                },
+                "end_button": {
+                    "description": "ddd",
+                    "locator_strategy": {
+                        "android": "ACCESSIBILITY_ID",
+                        "ios": "ACCESSIBILITY_ID"
+                    },
+                    "value": {
+                        "android": "최근 기록",
+                        "ios": "최근 기록"
+                    }
+                }
+            },
+            "통화 내용 검색_약속": {
+                "description": "'약속' 검색 후 결과 화면이 뜨기까지의 시간을 측정",
+                "init_element": {
+                    "locator_strategy": {
+                        "android": "ANDROID_UIAUTOMATOR",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "new UiSelector().text(\"최근 기록\").instance(0)",
+                        "ios": "//*[@name='search_bar']"
+                    }
+                },
+                "init_button": {
+                    "description": "ddd",
+                    "locator_strategy": {
+                        "android": "ACCESSIBILITY_ID",
+                        "ios": "ACCESSIBILITY_ID"
+                    },
+                    "value": {
+                        "android": "연락처",
+                        "ios": "연락처"
+                    }
+                },
+                "init_button2": {
+                    "description": "ddd",
+                    "locator_strategy": {
+                        "android": "ANDROID_UIAUTOMATOR",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "new UiSelector().className(\"android.widget.Button\").instance(0)",
+                        "ios": "//*[@name='search_bar']"
+                    }
+                },
+                "input_field": {
+                    "locator_strategy": {
+                        "android": "CLASS_NAME",
+                        "ios": "CLASS_NAME"
+                    },
+                    "value": {
+                        "android": "android.widget.EditText",
+                        "ios": "new UiSelector().className(\"android.widget.EditText\")"
+                    }
+                },
+                "search_text": "약속",
+                "search_button": {
+                    "description": "ddd",
+                    "locator_strategy": {
+                        "android": "ACCESSIBILITY_ID",
+                        "ios": "ACCESSIBILITY_ID"
+                    },
+                    "value": {
+                        "android": "검색",
+                        "ios": "검색"
+                    }
+                },
+                "end_element": {
+                    "description": "ddd",
+                    "locator_strategy": {
+                        "android": "ANDROID_UIAUTOMATOR",
+                        "ios": "XPATH"
+                    },
+                    "value": {
+                        "android": "new UiSelector().className(\"android.view.View\").instance(16)",
+                        "ios": "//*[@name='search_result']"
+                    }
+                }
+            },
+            "메뉴 이동 소요시간": {
+                "description": "최근기록→연락처 이동 후 [내 프로필] 텍스트가 나타날 때까지의 시간을 측정_업데이트 후 안됨",
                 "start_element": {
                     "locator_strategy": {
                         "android": "ANDROID_UIAUTOMATOR",
@@ -52,71 +293,7 @@
                         "ios": "//*[@name='checkin_button']"
                     }
                 }
-            },
-            "통화 내용 검색": {
-                "description": "'약속' 검색 후 결과 화면이 뜨기까지의 시간을 측정",
-                "init_element": {
-                    "locator_strategy": {
-                        "android": "ANDROID_UIAUTOMATOR",
-                        "ios": "XPATH"
-                    },
-                    "value": {
-                        "android": "new UiSelector().text(\"최근 기록\").instance(0)",
-                        "ios": "//*[@name='search_bar']"
-                    }
-                },
-                "start_element": {
-                    "locator_strategy": {
-                        "android": "ACCESSIBILITY_ID",
-                        "ios": "ACCESSIBILITY_ID"
-                    },
-                    "value": {
-                        "android": "연락처",
-                        "ios": "연락처"
-                    }
-                },
-                "start_element_2": {
-                    "locator_strategy": {
-                        "android": "ANDROID_UIAUTOMATOR",
-                        "ios": "XPATH"
-                    },
-                    "value": {
-                        "android": "new UiSelector().className(\"android.widget.Button\").instance(0)",
-                        "ios": "//*[@name='search_bar']"
-                    }
-                },
-                "input_field": {
-                    "locator_strategy": {
-                        "android": "ANDROID_UIAUTOMATOR",
-                        "ios": "XPATH"
-                    },
-                    "value": {
-                        "android": "new UiSelector().className(\"android.view.View\").instance(4)",
-                        "ios": "//*[@name='search_input']"
-                    }
-                },
-                "search_button": {
-                    "locator_strategy": {
-                        "android": "ACCESSIBILITY_ID",
-                        "ios": "ACCESSIBILITY_ID"
-                    },
-                    "value": {
-                        "android": "검색",
-                        "ios": "검색"
-                    }
-                },
-                "search_text": "약속",
-                "end_element": {
-                    "locator_strategy": {
-                        "android": "ANDROID_UIAUTOMATOR",
-                        "ios": "XPATH"
-                    },
-                    "value": {
-                        "android": "new UiSelector().className(\"android.view.View\").instance(16)",
-                        "ios": "//*[@name='search_result']"
-                    }
-                }
-            }
+            }            
         }
     },
     "U+ 멤버십": {

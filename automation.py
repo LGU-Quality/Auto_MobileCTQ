@@ -28,6 +28,7 @@ LOCATOR_MAPPING = {
     "ANDROID_UIAUTOMATOR": AppiumBy.ANDROID_UIAUTOMATOR,
     "IOS_PREDICATE": AppiumBy.IOS_PREDICATE,
     "ACCESSIBILITY_ID": AppiumBy.ACCESSIBILITY_ID,
+    "CLASS_NAME" : By.CLASS_NAME,
     "DOM": "DOM"
 }
 
@@ -103,6 +104,12 @@ def get_locator_strategy(element_info, platform_name):
     return LOCATOR_MAPPING.get(locator_strategy, default_strategy), locator_value
 
 
+""" measure_app_launch_time
+- 앱 실행 시간 속도 측정 함수
+- 필요 Config 및 동작 순서: 
+0. 앱 실행
+1. success_element 가 탐색되는 즉시 종료
+"""
 def measure_app_launch_time(app_package, app_activity, test_info, device_name, platform_name, wait_time=10, test_count=10, log_signal=None):
     """앱 실행 후 특정 UI가 나타날 때까지의 시간을 측정"""
     
@@ -141,7 +148,14 @@ def measure_app_launch_time(app_package, app_activity, test_info, device_name, p
 
             log_signal.emit(f"✅ 실행 시간: {launch_time:.2f} 초")
 
-            time.sleep(3)
+            try:
+                end_button_by, end_button_element = get_locator_strategy(test_info["end_button"], platform_name)
+                action_elem = driver.find_element(end_button_by, end_button_element)
+                action_elem.click()
+            except Exception as e:
+                log_signal.emit("⚠️ 마지막 요소 클릭 실패(혹은 미설정)")
+
+            time.sleep(1)
 
     except Exception as e:
         print(e)
@@ -153,6 +167,15 @@ def measure_app_launch_time(app_package, app_activity, test_info, device_name, p
     return launch_times, avg_time
 
 
+""" measure_screen_transition
+- 화면 이동 시간 측정 함수
+- 필요 Config 및 동작 순서: 
+0. 앱 실행
+1. start_element 대기
+2. action 클릭
+3. end_element 가 확인되면 종료
+4. [옵션] end_button이 정의되어 있을 경우 end_button 누르고 종료
+"""
 def measure_screen_transition(app_package, app_activity, test_info, device_name, platform_name, wait_time=10, test_count=10, log_signal=None):
     """특정 화면(A)에서 화면(B)으로 이동하는 데 걸리는 시간을 측정"""
 
@@ -202,7 +225,14 @@ def measure_screen_transition(app_package, app_activity, test_info, device_name,
             except TimeoutException:
                 log_signal.emit("❌ 화면 전환 실패")
 
-            time.sleep(3)
+            try:
+                end_button_by, end_button_element = get_locator_strategy(test_info["end_button"], platform_name)
+                action_elem = driver.find_element(end_button_by, end_button_element)
+                action_elem.click()
+            except Exception as e:
+                log_signal.emit("⚠️ 마지막 요소 클릭 실패(혹은 미설정)")
+
+            time.sleep(1)
 
     finally:
         driver.quit()
@@ -211,6 +241,136 @@ def measure_screen_transition(app_package, app_activity, test_info, device_name,
     return transition_times, avg_time
 
 
+""" measure_screen_transition_with_extraBtn
+- 화면 이동 시간 측정 함수_2
+- 필요 Config 및 동작 순서: 
+0. 앱 실행
+1. {init_button} 클릭 <- 해당 부분이 추가됨
+2. start_element 대기
+3. action 클릭
+4. {action2~3} 클릭 <- 해당 부분이 추가됨
+5. end_element 가 확인되면 종료
+6. [옵션] end_button이 정의되어 있을 경우 end_button 누르고 종료
+"""
+def measure_screen_transition_with_extraBtn(app_package, app_activity, test_info, device_name, platform_name, wait_time=10, test_count=10, log_signal=None):
+    """특정 화면(A)에서 화면(B)으로 이동하는 데 걸리는 시간을 측정"""
+
+    driver = setup_driver(platform_name, app_package, app_activity, device_name)
+    driver.implicitly_wait(0)  # Explicit wait만 사용하여 대기 시간 최적화
+
+    transition_times = []
+
+    try:
+        for i in range(test_count):
+            log_signal.emit(f"테스트 {i + 1}/{test_count} 시작")
+
+            driver.terminate_app(app_package)
+            time.sleep(2)
+            driver.activate_app(app_package)
+
+            init_btn_by, init_btn_element = get_locator_strategy(test_info["init_button"], platform_name)
+            start_by, start_element = get_locator_strategy(test_info["start_element"], platform_name)
+            action_by, action_element = get_locator_strategy(test_info["action"], platform_name)
+            end_by, end_element = get_locator_strategy(test_info["end_element"], platform_name)
+
+            try:
+                init_btn = WebDriverWait(driver, wait_time).until(
+                    EC.presence_of_element_located((init_btn_by, init_btn_element))
+                )
+                init_btn.click()
+                log_signal.emit("✅ 초기 버튼 클릭 완료")
+            except TimeoutException:
+                log_signal.emit("❌ 초기 버튼 탐색 실패")
+                continue
+
+            try:
+                WebDriverWait(driver, wait_time).until(
+                    EC.presence_of_element_located((start_by, start_element))
+                )
+            except TimeoutException:
+                log_signal.emit("❌ 시작 화면 탐색 실패")
+                continue
+
+            try:
+                action = driver.find_element(action_by, action_element)
+                action.click()
+            except:
+                log_signal.emit("❌ 액션 버튼을 찾을 수 없음")
+                continue
+
+            # 🔹 action2 존재하는 경우 클릭 수행
+            if "action2" in test_info:
+                try:
+                    action2_by, action2_element = get_locator_strategy(test_info["action2"], platform_name)
+                    log_signal.emit(f"🔍 init_button2 확인: ({action2_by}, {action2_element})")
+                    
+                    action2 = WebDriverWait(driver, wait_time).until(
+                        EC.element_to_be_clickable((action2_by, action2_element))
+                    )
+                    action2.click()
+                    log_signal.emit("✅ action2 클릭 완료")
+                except TimeoutException:
+                    log_signal.emit("❌ action2 요소 탐색 실패")
+                    continue
+
+            # 🔹 action3 존재하는 경우 클릭 수행
+            if "action3" in test_info:
+                try:
+                    action3_by, action3_element = get_locator_strategy(test_info["action3"], platform_name)
+                    log_signal.emit(f"🔍 action3 확인: ({action3_by}, {action3_element})")
+                    
+                    action3 = WebDriverWait(driver, wait_time).until(
+                        EC.element_to_be_clickable((action3_by, action3_element))
+                    )
+                    action3.click()
+                    log_signal.emit("✅ action3 클릭 완료")
+                except TimeoutException:
+                    log_signal.emit("❌ action3 요소 탐색 실패")
+                    continue
+
+            log_signal.emit("✅ 버튼 클릭 완료, 화면 전환 시작")
+            start_time = time.time()
+
+            try:
+                WebDriverWait(driver, wait_time, poll_frequency=0.1).until(
+                    EC.presence_of_element_located((end_by, end_element))
+                )
+                end_time = time.time()
+                transition_time = end_time - start_time
+                transition_times.append(transition_time)
+                log_signal.emit(f"✅ 화면 전환 완료: {transition_time:.2f} 초")
+            except TimeoutException:
+                log_signal.emit("❌ 화면 전환 실패")
+
+            try:
+                end_button_by, end_button_element = get_locator_strategy(test_info["end_button"], platform_name)
+                action_elem = driver.find_element(end_button_by, end_button_element)
+                action_elem.click()
+            except Exception as e:
+                log_signal.emit("⚠️ 마지막 요소 클릭 실패(혹은 미설정)")
+
+            time.sleep(1)
+
+    finally:
+        driver.quit()
+
+    avg_time = sum(transition_times) / len(transition_times) if transition_times else 0
+    return transition_times, avg_time
+
+
+""" measure_search_time
+- Text 입력이 필요한 화면 이동 시간 측정 함수
+- 필요 Config 및 동작 순서: 
+0. 앱 실행
+1. init_element 대기
+2. init_button 클릭
+3. [옵션] init_button2 클릭
+4. input_field 대기
+5. search_text 전송
+6. search_button 클릭
+7. end_element 가 확인되면 종료
+8. [옵션] end_button이 정의되어 있을 경우 end_button 누르고 종료
+"""
 def measure_search_time(app_package, app_activity, test_info, device_name, platform_name, wait_time=10, test_count=10, log_signal=None):
     """검색어 입력 후 검색 결과가 나타날 때까지의 시간을 측정"""
 
@@ -228,7 +388,7 @@ def measure_search_time(app_package, app_activity, test_info, device_name, platf
             driver.activate_app(app_package)
 
             init_by, init_element = get_locator_strategy(test_info["init_element"], platform_name)
-            start_by, start_element = get_locator_strategy(test_info["start_element"], platform_name)
+            init_btn_by, init_btn_element = get_locator_strategy(test_info["init_button"], platform_name)
             input_by, input_element = get_locator_strategy(test_info["input_field"], platform_name)
             search_by, search_element = get_locator_strategy(test_info["search_button"], platform_name)
             end_by, end_element = get_locator_strategy(test_info["end_element"], platform_name)
@@ -242,31 +402,35 @@ def measure_search_time(app_package, app_activity, test_info, device_name, platf
                 continue    
 
             try:
-                start_button = driver.find_element(start_by, start_element)
-                start_button.click()
-                time.sleep(3)
+                init_button = driver.find_element(init_btn_by, init_btn_element)
+                init_button.click()
 
-                # 🔹 [2] start_element_2가 존재하는 경우 클릭 수행
-                if "start_element_2" in test_info:
+                # 🔹 init_button2 존재하는 경우 클릭 수행
+                if "init_button2" in test_info:
                     try:
-                        start2_by, start2_element = get_locator_strategy(test_info["start_element_2"], platform_name)
-                        log_signal.emit(f"🔍 start_element_2 확인: ({start2_by}, {start2_element})")
+                        init_btn2_by, init_btn2_element = get_locator_strategy(test_info["init_button2"], platform_name)
+                        log_signal.emit(f"🔍 init_button2 확인: ({init_btn2_by}, {init_btn2_element})")
                         
-                        start_button_2 = WebDriverWait(driver, wait_time).until(
-                            EC.element_to_be_clickable((start2_by, start2_element))
+                        init_button2 = WebDriverWait(driver, wait_time).until(
+                            EC.element_to_be_clickable((init_btn2_by, init_btn2_element))
                         )
-                        start_button_2.click()
-                        time.sleep(2)  # 클릭 후 잠시 대기
+                        init_button2.click()
+                        time.sleep(1)  # 클릭 후 잠시 대기
                         log_signal.emit("✅ start_element_2 클릭 완료")
                     except TimeoutException:
                         log_signal.emit("❌ start_element_2 요소 탐색 실패 (무시하고 진행)")
                         
-                search_input = driver.find_element(input_by, input_element)
-                search_input.clear()
-                search_input.send_keys(test_info["search_text"])
-
-                search_button = driver.find_element(search_by, search_element)
-                search_button.click()
+                try:
+                    search_input = WebDriverWait(driver, wait_time).until(
+                        EC.presence_of_element_located((input_by, input_element))
+                    )
+                    search_input.clear()
+                    search_input.send_keys(test_info["search_text"])
+                    search_button = driver.find_element(search_by, search_element)
+                    search_button.click()
+                except Exception as e:
+                    log_signal.emit(f"❌ input 요소 탐색 실패, {e}")
+                
             except Exception as e:
                 log_signal.emit(f"에러 발생: {e}")
                 continue
@@ -277,17 +441,21 @@ def measure_search_time(app_package, app_activity, test_info, device_name, platf
                 WebDriverWait(driver, wait_time, poll_frequency=0.1).until(
                     EC.presence_of_element_located((end_by, end_element))
                 )
+                end_time = time.time()
+                search_time = end_time - start_time
+                search_times.append(search_time)
+                log_signal.emit(f"✅ 검색 완료 시간: {search_time:.2f} 초")
             except TimeoutException:
                 log_signal.emit("❌ 결과 요소 탐색 실패")
 
-            end_time = time.time()
+            try:
+                end_button_by, end_button_element = get_locator_strategy(test_info["end_button"], platform_name)
+                action_elem = driver.find_element(end_button_by, end_button_element)
+                action_elem.click()
+            except Exception as e:
+                log_signal.emit("⚠️ 마지막 요소 클릭 실패(혹은 미설정)")
 
-            search_time = end_time - start_time
-            search_times.append(search_time)
-
-            log_signal.emit(f"✅ 검색 완료 시간: {search_time:.2f} 초")
-
-            time.sleep(3)
+            time.sleep(1)
 
     finally:
         driver.quit()

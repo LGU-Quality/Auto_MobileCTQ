@@ -9,20 +9,37 @@
         "tests": {
             "실행 시간": {
                 "description": "좌상단 \"최근 기록\" 텍스트가 나타날 때까지의 시간을 측정",
-                "success_element": {
+                "step1": {
+                    "action": "contains",
+                    "text": "오",
+                    "measure": "launch",
+                    "description": "최근 기록 내 가장 최근 통화의 텍스트가 존재 확인",
                     "locator_strategy": {
                         "android": "ANDROID_UIAUTOMATOR",
                         "ios": "XPATH"
                     },
                     "value": {
-                        "android": "new UiSelector().text(\"최근 기록\").instance(0)",
+                        "android": "new UiSelector().className(\"android.view.View\").instance(10)",
                         "ios": "//*[@name='Mobile Manager']"
+                    }
+                },
+                "step2": {
+                    "action": "touch",
+                    "description": "측정 불가현상을 막기 위해 하단 네비게이션 바 [최근 기록] 버튼 터치",
+                    "locator_strategy": {
+                        "android": "ACCESSIBILITY_ID",
+                        "ios": "ACCESSIBILITY_ID"
+                    },
+                    "value": {
+                        "android": "최근 기록",
+                        "ios": "최근 기록"
                     }
                 }
             },
             "앱 발신 소요시간_(전화 발신)": {
                 "description": "키패드 '0' 입력 후 발신화면이 나타날 때까지의 시간을 측정",
-                "init_button": {
+                "step1": {
+                    "action": "touch",
                     "description": "하단 네비게이션 바 [키패드] 버튼 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
@@ -33,7 +50,8 @@
                         "ios": "키패드"
                     }
                 },
-                "start_element": {
+                "step2": {
+                    "action": "search",
                     "description": "키패드 화면 내 [통화]아이콘 탐색",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
@@ -44,7 +62,8 @@
                         "ios": "받기"
                     }
                 },
-                "action": {
+                "step3": {
+                    "action": "touch",
                     "description": "키패드에서 숫자 '0' 터치",
                     "locator_strategy": {
                         "android": "ANDROID_UIAUTOMATOR",
@@ -55,7 +74,9 @@
                         "ios": "연락처"
                     }
                 },
-                "action2": {
+                "step4": {
+                    "action": "touch",
+                    "measure": "start",
                     "description": "키패드에서 [통화] 아이콘 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
@@ -66,7 +87,9 @@
                         "ios": "받기"
                     }
                 },
-                "end_element": {
+                "step5": {
+                    "action": "search",
+                    "measure": "end",
                     "description": "발신화면에서 [끊기] 아이콘 탐색",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
@@ -77,7 +100,8 @@
                         "ios": "끊기"
                     }
                 },
-                "end_button": {
+                "step6": {
+                    "action": "touch",
                     "description": "발신화면에서 [끊기] 아이콘 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
@@ -91,7 +115,8 @@
             },
             "메뉴 이동 소요시간_(최근기록→연락처)": {
                 "description": "최근기록→연락처 이동 후 [내 프로필] 텍스트가 나타날 때까지의 시간을 측정",
-                "init_button": {
+                "step1": {
+                    "action": "touch",
                     "description": "하단 네비게이션 바 [최근 기록] 버튼 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
@@ -102,7 +127,8 @@
                         "ios": "최근 기록"
                     }
                 },
-                "start_element": {
+                "step2": {
+                    "action": "search",
                     "description": "좌측 상단 '최근 기록' 텍스트 표시 대기",
                     "locator_strategy": {
                         "android": "ANDROID_UIAUTOMATOR",
@@ -113,7 +139,9 @@
                         "ios": "search_bar"
                     }
                 },
-                "action": {
+                "step3": {
+                    "action": "touch",
+                    "measure": "start",
                     "description": "하단 네비게이션 바 [연락처] 버튼 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
@@ -124,7 +152,9 @@
                         "ios": "연락처"
                     }
                 },
-                "end_element": {
+                "step4": {
+                    "action": "search",
+                    "measure": "end",
                     "description": "목록에서 '내 프로필' 텍스트 탐색",
                     "locator_strategy": {
                         "android": "ANDROID_UIAUTOMATOR",
@@ -149,7 +179,8 @@
                         "ios": "최근 기록"
                     }
                 },
-                "start_element": {
+                "step1": {
+                    "action": "search",
                     "description": "좌측 상단 '최근 기록' 텍스트 표시 대기",
                     "locator_strategy": {
                         "android": "ANDROID_UIAUTOMATOR",
@@ -160,7 +191,9 @@
                         "ios": "search_bar"
                     }
                 },
-                "action": {
+                "step2": {
+                    "action": "touch",
+                    "measure": "start",
                     "description": "하단 네비게이션 바 [디스커버] 버튼 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
@@ -171,18 +204,22 @@
                         "ios": "디스커버"
                     }
                 },
-                "end_element": {
-                    "description": "내용 중 '익시오 활용 가이드' 노출 탐색",
+                "step3": {
+                    "action": "contains",
+                    "text": "요일",
+                    "measure": "end",
+                    "description": "0월 0일 0'요일' 텍스트를 탐색",
                     "locator_strategy": {
                         "android": "ANDROID_UIAUTOMATOR",
                         "ios": "XPATH"
                     },
                     "value": {
-                        "android": "new UiSelector().text(\"익시오 활용 가이드\")",
+                        "android": "new UiSelector().className(\"android.view.View\").instance(4)",
                         "ios": "//*[@name='checkin_button']"
                     }
                 },
-                "end_button": {
+                "step4": {
+                    "action": "touch",
                     "description": "하단 네비게이션 바 [최근 기록] 버튼 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
@@ -196,7 +233,9 @@
             },
             "통화 내용 검색_약속": {
                 "description": "'약속' 검색 후 결과 화면이 뜨기까지의 시간을 측정",
-                "init_element": {
+                "step1": {
+                    "action": "search",
+                    "description": "좌측 상단 '최근 기록' 텍스트 표시 대기",
                     "locator_strategy": {
                         "android": "ANDROID_UIAUTOMATOR",
                         "ios": "XPATH"
@@ -206,7 +245,8 @@
                         "ios": "//*[@name='search_bar']"
                     }
                 },
-                "init_button": {
+                "step2": {
+                    "action": "touch",
                     "description": "하단 네비게이션 바 [연락처] 버튼 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
@@ -217,7 +257,8 @@
                         "ios": "연락처"
                     }
                 },
-                "init_button2": {
+                "step3": {
+                    "action": "touch",
                     "description": "상단 [돋보기] 아이콘 터치",
                     "locator_strategy": {
                         "android": "ANDROID_UIAUTOMATOR",
@@ -228,7 +269,8 @@
                         "ios": "//*[@name='search_bar']"
                     }
                 },
-                "input_field": {
+                "step4": {
+                    "action": "touch",
                     "description": "Input Field 설정",
                     "locator_strategy": {
                         "android": "CLASS_NAME",
@@ -239,8 +281,22 @@
                         "ios": "new UiSelector().className(\"android.widget.EditText\")"
                     }
                 },
-                "search_text": "약속",
-                "search_button": {
+                "step5": {
+                    "action": "send",
+                    "text": "약속",
+                    "description": "'약속' 텍스트 전송",
+                    "locator_strategy": {
+                        "android": "CLASS_NAME",
+                        "ios": "CLASS_NAME"
+                    },
+                    "value": {
+                        "android": "android.widget.EditText",
+                        "ios": "new UiSelector().className(\"android.widget.EditText\")"
+                    }
+                },                
+                "step6": {
+                    "action": "touch",
+                    "measure": "start",
                     "description": "우측 상단 [검색] 버튼 터치",
                     "locator_strategy": {
                         "android": "ACCESSIBILITY_ID",
@@ -251,7 +307,9 @@
                         "ios": "검색"
                     }
                 },
-                "end_element": {
+                "step7": {
+                    "action": "search",
+                    "measure": "end",
                     "description": "목록 중 녹음 내용에 '약속'이 있는 검색 결과 탐색",
                     "locator_strategy": {
                         "android": "ANDROID_UIAUTOMATOR",
@@ -262,208 +320,7 @@
                         "ios": "//*[@name='search_result']"
                     }
                 }
-            },
-            "메뉴 이동 소요시간": {
-                "description": "최근기록→연락처 이동 후 [내 프로필] 텍스트가 나타날 때까지의 시간을 측정_업데이트 후 안됨",
-                "start_element": {
-                    "locator_strategy": {
-                        "android": "ANDROID_UIAUTOMATOR",
-                        "ios": "ID"
-                    },
-                    "value": {
-                        "android": "new UiSelector().text(\"최근 기록\").instance(0)",
-                        "ios": "search_bar"
-                    }
-                },
-                "action": {
-                    "locator_strategy": {
-                        "android": "ACCESSIBILITY_ID",
-                        "ios": "ACCESSIBILITY_ID"
-                    },
-                    "value": {
-                        "android": "연락처",
-                        "ios": "연락처"
-                    }
-                },
-                "end_element": {
-                    "locator_strategy": {
-                        "android": "ANDROID_UIAUTOMATOR",
-                        "ios": "XPATH"
-                    },
-                    "value": {
-                        "android": "new UiSelector().text(\"내 프로필\")",
-                        "ios": "//*[@name='checkin_button']"
-                    }
-                }
-            }            
-        }
-    },
-
-    "위에까지는 기능 확인 완료" : {
-        "아래부터는 기능 재 확인 필요" : "재확인 필요"
-    },
-    "U+ 멤버십": {
-        "package": "uplus.membership",
-        "activity": "com.uplus.membership.smart.ui.main.MainActivity",
-        "tests": {
-            "실행 시간_MISSION_UIAUTOMATOR": {
-                "description": "하단 미션 버튼이 나타날 때까지의 시간을 측정",
-                "success_element": {
-                    "locator_strategy": {
-                        "android": "ANDROID_UIAUTOMATOR",
-                        "ios": "ANDROID_UIAUTOMATOR"
-                    },
-                    "value": {
-                        "android": "new UiSelector().resourceId(\"mission\")",
-                        "ios": "new UiSelector().className(\"android.widget.Image\").instance(0)"
-                    }
-                }
-            },
-            "실행 시간_좌상단_UIAUTOMATOR": {
-                "description": "좌상단 U+멤버십 로고가 나타날 때까지의 시간을 측정",
-                "success_element": {
-                    "locator_strategy": {
-                        "android": "ANDROID_UIAUTOMATOR",
-                        "ios": "ANDROID_UIAUTOMATOR"
-                    },
-                    "value": {
-                        "android": "new UiSelector().className(\"android.widget.Image\").instance(0)",
-                        "ios": "new UiSelector().className(\"android.widget.Image\").instance(0)"
-                    }
-                }
-            },
-            "실행 시간_DOM_RAW": {
-                "description": "좌상단 U+멤버십 로고가 나타날 때까지의 시간을 측정",
-                "success_element": {
-                    "locator_strategy": {
-                        "android": "DOM",
-                        "ios": "ANDROID_UIAUTOMATOR"
-                    },
-                    "value": {
-                        "android": "resource-id=\"mission\"",
-                        "ios": "new UiSelector().className(\"android.widget.Image\").instance(0)"
-                    }
-                }
-            },
-            "미션탭 진입": {
-                "description": "홈 화면 내 '00월의 유플투쁠 혜택'이 나타난 화면에서 '미션'버튼 클릭 후 '출석 체크하기' 나타날 때까지의 시간을 측정",
-                "start_element": {
-                    "locator_strategy": {
-                        "android": "XPATH",
-                        "ios": "ID"
-                    },
-                    "value": {
-                        "android": "//android.widget.TextView[@text='월의 유플투쁠 혜택']",
-                        "ios": "search_bar"
-                    }
-                },
-                "action": {
-                    "locator_strategy": {
-                        "android": "XPATH",
-                        "ios": "ID"
-                    },
-                    "value": {
-                        "android": "//android.widget.Button[@resource-id='mission']",
-                        "ios": "mission_button"
-                    }
-                },
-                "end_element": {
-                    "locator_strategy": {
-                        "android": "XPATH",
-                        "ios": "XPATH"
-                    },
-                    "value": {
-                        "android": "//android.widget.Button[@text='출석 체크하기']",
-                        "ios": "//*[@name='checkin_button']"
-                    }
-                }
-            },
-            "[임시]검색 기능 테스트": {
-                "description": "'약속' 검색 후 결과 화면이 뜨기까지의 시간을 측정",
-                "init_element": {
-                    "locator_strategy": {
-                        "android": "ANDROID_UIAUTOMATOR",
-                        "ios": "XPATH"
-                    },
-                    "value": {
-                        "android": "new UiSelector().className(\"android.widget.Image\").instance(0)",
-                        "ios": "//*[@name='search_bar']"
-                    }
-                },
-                "start_element": {
-                    "locator_strategy": {
-                        "android": "XPATH",
-                        "ios": "XPATH"
-                    },
-                    "value": {
-                        "android": "//android.widget.Button[@text=\"\"]",
-                        "ios": "//*[@name='search_bar']"
-                    }
-                },
-                "input_field": {
-                    "locator_strategy": {
-                        "android": "XPATH",
-                        "ios": "XPATH"
-                    },
-                    "value": {
-                        "android": "//android.widget.EditText",
-                        "ios": "//*[@name='search_input']"
-                    }
-                },
-                "search_button": {
-                    "locator_strategy": {
-                        "android": "XPATH",
-                        "ios": "XPATH"
-                    },
-                    "value": {
-                        "android": "//android.widget.Button[@text=\"\"]",
-                        "ios": "//*[@name='search_btn']"
-                    }
-                },
-                "search_text": "약속",
-                "end_element": {
-                    "locator_strategy": {
-                        "android": "XPATH",
-                        "ios": "XPATH"
-                    },
-                    "value": {
-                        "android": "//android.widget.TextView[contains(@text, '검색 결과가 없어요')]",
-                        "ios": "//*[@name='search_result']"
-                    }
-                }
-            }
-        }
-    },
-    "모바일 매니저": {
-        "package": "lgt.call",
-        "activity": "lgt.call.Main",
-        "tests": {
-            "실행 시간": {
-                "description": "좌상단 U+모바일매니저 로고가 나타날 때까지의 시간을 측정",
-                "success_element": {
-                    "locator_strategy": {
-                        "android": "XPATH",
-                        "ios": "XPATH"
-                    },
-                    "value": {
-                        "android": "//*[@text='모바일 매니저']",
-                        "ios": "//*[@name='Mobile Manager']"
-                    }
-                }
-            }
-        }
-    },
-    "구 컨피그": {
-        "package": "lgt.call",
-        "activity": "lgt.call.Main",
-        "tests": {
-            "실행 시간": {
-                "description": "좌상단 U+모바일매니저 로고가 나타날 때까지의 시간을 측정",
-                "success_element": {
-                    "android": "//*[@text='모바일 매니저']",
-                    "ios": "//*[@name='Mobile Manager']"
-                }
-            }
+            }   
         }
     }
 }
